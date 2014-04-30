@@ -4,3 +4,10 @@ jbn:
   feed_url: http://blog.johnbjorn.com/atom.xml
   twitter: generativist
   blurb: I build ABMs of political systems. I am interested in understanding electoral politics in America. More specifically, I want to interrogate how well our electoral system represents voters preferences.
+  
+carrknight:
+  name: Ernesto Carrella
+  site_url: http://carrknight.github.io/blog.html
+  feed_url: http://carrknight.github.io/feed.xml
+  blurb: I build simple economic ABMs. These models are cybernetic: agents work in simple feedback loops.
+ 
