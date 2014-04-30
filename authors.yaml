@@ -4,21 +4,21 @@ jbn:
   feed_url: http://blog.johnbjorn.com/atom.xml
   twitter: generativist
   blurb: I build ABMs of political systems. I am interested in understanding electoral politics in America. More specifically, I want to interrogate how well our electoral system represents voters preferences.
-  
+
 carrknight:
   name: Ernesto Carrella
   site_url: http://carrknight.github.io/blog.html
   feed_url: http://carrknight.github.io/feed.xml
-  blurb: I build simple economic ABMs. These models are cybernetic: agents work in simple feedback loops.
+  blurb: "I build simple economic ABMs. These models are cybernetic: agents work in simple feedback loops."
 
 cw:
   name: Clarence Dillon, aka CW Dillon
   site_url: http://usuallycwdillon.github.io/
   feed_url: http://usuallycwdillon.github.io/atom.xml
   twitter: cwdillon
-  blurb: I am interested in the emergence and dynamisms of global political structures, particularly in how individuals and small groups influence international structure---start wars, alter alliances, develop and confound established structures; anarchy and that sort of thing.
+  blurb: "I am interested in the emergence and dynamisms of global political structures, particularly in how individuals and small groups influence international structure---start wars, alter alliances, develop and confound established structures; anarchy and that sort of thing."
 
- cmetgher:
+cmetgher:
   name: Cristina Metgher
   site_url: http://healthyagents.com/
   feed_url: http://healthyagents.com/atom.xml
