@@ -1,0 +1,7 @@
+*.pyc
+
+# The third-party dependencies must be included at deploy-time, but need not
+# pollute the repository.
+lib/
+!lib/README.md
+.DS_Store

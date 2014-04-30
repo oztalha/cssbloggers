@@ -1,0 +1,4 @@
+cron:
+- description: post fetch job
+  url: /pull_posts
+  schedule: every 4 hours

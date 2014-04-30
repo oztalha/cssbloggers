@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block aside %}
+<aside>
+    <h3>Welcome.</h3>
+    <p>
+        This website aggregates the blogs of graduate students at
+        <a href="http://gmu.edu">George Mason University's</a>
+        <a href="http://www.css.gmu.edu/">Department of Computational Social Science</a>,
+        part of the
+        <a href="http://krasnow.gmu.edu/">The Krasnow Institute for Advanced Study<a/>.
+        As this department name implies, we study and write about
+        <abbr title="Computational Social Science">CSS</abbr>. It's a bit of
+        a free-wheeling discipline, spanning anthropology, sociology, psychology,
+        economics, and computer science. Mostly, we
+        <abbr title="Agent-Based Models">ABM</abbr>s, simulating social or
+        economic systems, hoping to discover how they tick.
+    </p>
+    <p>
+        Only excerpts exist on this website. Once you click a link, you'll visit
+        the student's own blog page. If you'd like to follow our work without
+        visiting this page, subscribe to our RSS feed or follow our twitter bot.
+    </p>
+    <p>
+        [RSS]
+        [TWITTER]
+    </p>
+</aside>
+{% endblock %}
+
+{% block body %}
+<article>
+    <header>
+        {% if request.args.get('page') or author_name %}
+            <a href="/">Home</a>
+            {% if author_name %} &raquo
+                {%if request.args.get('page') %}
+                    <a href="/stories/by/{{author_id}}">{{author_name}}</a>
+                {% else %}
+                    {{author_name}}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+        <h1>The Blog Feed</h1>
+    </header>
+    {% for post in posts %}
+    <section>
+        <h2><a href="{{post.link}}">{{ post.title }}</a></h2>
+        Written <time datetime="{{ post.date }}">{{ post.date | pretty_date}}</time> by
+        <a href="/stories/by/{{post.author_id}}">{{post.author}}</a>
+        <p>
+            {{post.summary|striptags|truncate(255)}}
+        </p>
+    </section>
+    {% endfor %}
+
+    {% if prev_cursor %} <a href="?page={{prev_cursor.urlsafe()}}">Previous</a> {% endif %}
+    {% if more %} <a href="?page={{next_cursor.urlsafe()}}">Next</a> {% endif %}
+</article>
+{% endblock %}
