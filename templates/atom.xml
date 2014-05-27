@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <author>CSS Bloggers</author>
+    <title>CSS Bloggers</title>
+    {%for story in stories %}
+    <entry>
+        <title>{{story.title}}</title>
+        <link href="{{story.link}}"/>
+        <content type="html">{{story.summary}}</content>
+    </entry>
+    {%endfor%}
+</feed>

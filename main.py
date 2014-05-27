@@ -5,7 +5,7 @@ import yaml
 from google.appengine.api import urlfetch
 from google.appengine.ext import db
 from google.appengine.ext import ndb
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 
 import feedparser
 
@@ -94,6 +94,14 @@ def index(author_id=None):
                            author=author,
                            author_id=author_id,
                            other_contribs=other_contribs)
+
+
+@app.route('/atom.xml')
+def atom_feed():
+    stories = Story.query().order(-Story.date).fetch(10)
+    response = make_response(render_template('atom.xml', stories=stories))
+    response.content_type='text/xml'
+    return response
 
 
 # This function is lazily implemented. It should put() only on an observable
