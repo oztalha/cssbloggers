@@ -2,8 +2,6 @@ cron:
 - description: post fetch job
   url: /pull_posts
   schedule: every 4 hours
-
-cron:
 - description: post fetch job
   url: /tweet_posts
   schedule: every 6 hours
