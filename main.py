@@ -76,7 +76,7 @@ def index(author_id=None):
     # Build the cursor.
     page = request.args.get('page', None)
     cursor = ndb.Cursor(urlsafe=page) if page else ndb.Cursor()
-    posts, next_cursor, more = q.fetch_page(1, start_cursor=cursor)
+    posts, next_cursor, more = q.fetch_page(10, start_cursor=cursor)
 
     # XXX: TODO: Implement backwards cursors for "prev" buttons.
     prev_cursor=None
