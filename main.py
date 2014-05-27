@@ -10,8 +10,11 @@ from flask import Flask, render_template, request
 import feedparser
 
 # If you're getting __ssl import errors, it's mostly due to a GAE flaw. 
-# Comment out the following import, and let someone else worry about tweeting.
-#import tweepy
+# I've tested the tweepy code in the REPL and it works. This feels terrible!
+try:
+    import tweepy
+except ImportError:
+    pass
 
 
 # Define the application.
@@ -43,7 +46,7 @@ class Story(ndb.Model):
     title = ndb.StringProperty(indexed=False, required=True)
     summary = ndb.StringProperty(indexed=False, required=True)
     link = ndb.StringProperty(indexed=False, required=True)
-    tweeted = ndb.BooleanProperty(indexed=False, required=True)
+    tweeted = ndb.BooleanProperty(indexed=True, required=True)
 
 ################################################################################
 #                                _             _ _                             #
@@ -122,7 +125,7 @@ def pull_posts():
 
 @app.route('/tweet_posts')
 def tweet_posts():
-    for stories in Story.query(Story.tweeted == False):
+    for story in Story.query(Story.tweeted != True).fetch(1):
         try:
             auth = tweepy.OAuthHandler(TWITTER['api_key'], 
                                        TWITTER['api_secret'])
@@ -135,11 +138,11 @@ def tweet_posts():
 
         # If there is an error, ignore it and still consider it tweeted.
         # This is not a high-availability-required service. 
-        story.tweeted=True
+        story.tweeted = True
         story.put()
-        
-        break # Tweet one at a time.
-    return "ok"
+
+        return story.link # Tweet one at a time.
+    return "noop"
 
 
 @app.errorhandler(404)

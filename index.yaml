@@ -1,0 +1,7 @@
+indexes:
+- kind: Story 
+  properties: 
+  - name: author_id 
+  - name: date 
+    direction: desc
+  - name: tweeted
