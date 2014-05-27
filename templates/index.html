@@ -1,31 +1,62 @@
 {% extends "base.html" %}
+
 {% block aside %}
-<aside>
-    <h3>Welcome.</h3>
-    <p>
-        This website aggregates the blogs of graduate students at
-        <a href="http://gmu.edu">George Mason University's</a>
-        <a href="http://www.css.gmu.edu/">Department of Computational Social Science</a>,
-        part of the
-        <a href="http://krasnow.gmu.edu/">The Krasnow Institute for Advanced Study<a/>.
-        As this department name implies, we study and write about
-        <abbr title="Computational Social Science">CSS</abbr>. It's a bit of
-        a free-wheeling discipline, spanning anthropology, sociology, psychology,
-        economics, and computer science. Mostly, we employ
-        <abbr title="Agent-Based Models">ABM</abbr>s, simulating social or
-        economic systems, hoping to discover how they tick.
-    </p>
-    <p>
-        Only excerpts exist on this website. Once you click a link, you'll visit
-        the student's own blog page. If you'd like to follow our work without
-        visiting this page, subscribe to our RSS feed or follow our twitter bot.
-    </p>
-    <p>
-        [RSS]
-        [TWITTER]
-    </p>
-</aside>
+    {% if author and not request.args.get('page')%}
+        <aside>
+            <h3>{{author.name}}</h3>
+            <p>
+                {{author.blurb}}
+            </p>
+            <p>
+                Only excerpts exist on this website. Once you click a link, you'll visit
+                the student's own blog page. If you'd like to follow our work without
+                visiting this page, subscribe to our RSS feed or follow our twitter bot.
+            </p>
+            <ul>
+                <li><a href="{{author.site_url}}">My Blog</a></li>
+                {% if author.twitter %}
+                <li><a href="http://twitter.com/{{author.twitter}}">@{{author.twitter}}</a></li>
+                {% endif %}
+            </ul>
+        </aside>
+    {% elif not request.args.get('page') %}
+    <aside>
+        <h3>Welcome.</h3>
+        <p>
+            This website aggregates the blogs of graduate students at
+            <a href="http://gmu.edu">George Mason University's</a>
+            <a href="http://www.css.gmu.edu/">Department of Computational Social Science</a>,
+            part of the
+            <a href="http://krasnow.gmu.edu/">The Krasnow Institute for Advanced Study<a/>.
+            As this department name implies, we study and write about
+            <abbr title="Computational Social Science">CSS</abbr>. It's a bit of
+            a free-wheeling discipline, spanning anthropology, sociology, psychology,
+            economics, and computer science. Mostly, we employ
+            <abbr title="Agent-Based Models">ABM</abbr>s, simulating social or
+            economic systems, hoping to discover how they tick.
+        </p>
+        <p>
+            Only excerpts exist on this website. Once you click a link, you'll visit
+            the student's own blog page. If you'd like to follow our work without
+            visiting this page, subscribe to our RSS feed or follow our twitter bot.
+        </p>
+        <p>
+            [RSS]
+            [TWITTER]
+        </p>
+    </aside>
+    {% else %}
+        <aside>
+            <h3>Contributors</h3>
+            <ul>
+            {% for author in other_contribs %}
+                <li><a href="/stories/by/{{author.id}}">{{author.name}}</a></li>
+            {% endfor %}
+            </ul>
+        </aside>
+    {% endif %}
 {% endblock %}
+
 
 {% block body %}
 <article>

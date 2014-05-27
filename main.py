@@ -34,6 +34,8 @@ app = Flask(__name__)
 # and I'd rather a pre-loaded dict that I can pass around that doesn't
 # need periodic refreshing.
 AUTHORS = yaml.load(open('authors.yaml'))
+for author_id, author_obj in AUTHORS.items():
+    author_obj['id'] = author_id
 
 # This yaml file should be kept secret!
 TWITTER = yaml.load(open('twitter.yaml'))
@@ -61,13 +63,13 @@ class Story(ndb.Model):
 @app.route('/stories/by/<author_id>')
 def index(author_id=None):
     # Build the query.
-    author_name = None
+    author, other_contribs = None, None
     if author_id:
         if author_id not in AUTHORS:
             return render_template('404.html'), 404
         else:
             q = Story.query(Story.author_id == author_id)
-            author_name = AUTHORS[author_id]['name']
+            author = AUTHORS[author_id]
     else:
         q = Story.query()
 
@@ -81,13 +83,17 @@ def index(author_id=None):
     # XXX: TODO: Implement backwards cursors for "prev" buttons.
     prev_cursor=None
 
+    other_contribs = [a for a in AUTHORS.values()]
+    random.shuffle(other_contribs)
+
     return render_template('index.html',
                            posts=posts,
                            next_cursor=next_cursor,
                            prev_cursor=None,#next_cursor.reversed(),
                            more=more,
-                           author_name=author_name,
-                           author_id=author_id)
+                           author=author,
+                           author_id=author_id,
+                           other_contribs=other_contribs)
 
 
 # This function is lazily implemented. It should put() only on an observable
