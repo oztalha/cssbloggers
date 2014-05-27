@@ -9,6 +9,11 @@ from flask import Flask, render_template, request
 
 import feedparser
 
+# If you're getting __ssl import errors, it's mostly due to a GAE flaw. 
+# Comment out the following import, and let someone else worry about tweeting.
+#import tweepy
+
+
 # Define the application.
 app = Flask(__name__)
 
@@ -27,6 +32,9 @@ app = Flask(__name__)
 # need periodic refreshing.
 AUTHORS = yaml.load(open('authors.yaml'))
 
+# This yaml file should be kept secret!
+TWITTER = yaml.load(open('twitter.yaml'))
+
 # This is the only model used. 
 class Story(ndb.Model):
     author_id = ndb.StringProperty(indexed=True, required=True)
@@ -35,6 +43,7 @@ class Story(ndb.Model):
     title = ndb.StringProperty(indexed=False, required=True)
     summary = ndb.StringProperty(indexed=False, required=True)
     link = ndb.StringProperty(indexed=False, required=True)
+    tweeted = ndb.BooleanProperty(indexed=False, required=True)
 
 ################################################################################
 #                                _             _ _                             #
@@ -58,12 +67,13 @@ def index(author_id=None):
             author_name = AUTHORS[author_id]['name']
     else:
         q = Story.query()
+
     q = q.order(-Story.date)
 
     # Build the cursor.
     page = request.args.get('page', None)
     cursor = ndb.Cursor(urlsafe=page) if page else ndb.Cursor()
-    posts, next_cursor, more = q.fetch_page(3, start_cursor=cursor)
+    posts, next_cursor, more = q.fetch_page(1, start_cursor=cursor)
 
     # XXX: TODO: Implement backwards cursors for "prev" buttons.
     prev_cursor=None
@@ -84,11 +94,13 @@ def add_or_update_stories(author_id, blog_url):
     stories = fetch_stories(blog_url)
     for story in stories:
         try:
-            blog_post = Story(id=story['link'])
-            blog_post.populate(**story)
-            blog_post.author_id = author_id
-            blog_post.author = AUTHORS[author_id]['name']
-            blog_post.put()
+            if Story.get_by_id(story['link']) is None:
+                blog_post = Story(id=story['link'])
+                blog_post.populate(**story)
+                blog_post.author_id = author_id
+                blog_post.author = AUTHORS[author_id]['name']
+                blog_post.tweeted = False
+                blog_post.put()
         except db.Error:
             pass # XXX: TODO: ADD LOGGING
 
@@ -106,6 +118,28 @@ def pull_posts():
         add_or_update_stories(author_id, AUTHORS[author_id]['feed_url'])
 
     return 'ok'
+
+
+@app.route('/tweet_posts')
+def tweet_posts():
+    for stories in Story.query(Story.tweeted == False):
+        try:
+            auth = tweepy.OAuthHandler(TWITTER['api_key'], 
+                                       TWITTER['api_secret'])
+            auth.set_access_token(TWITTER['consumer_key'], 
+                                  TWITTER['consumer_secret'])
+            api = tweepy.API(auth)
+            api.update_status("%s %s" % (story.title[:120], story.link))
+        except:
+            pass # XXX: TODO: ADD LOGGING
+
+        # If there is an error, ignore it and still consider it tweeted.
+        # This is not a high-availability-required service. 
+        story.tweeted=True
+        story.put()
+        
+        break # Tweet one at a time.
+    return "ok"
 
 
 @app.errorhandler(404)

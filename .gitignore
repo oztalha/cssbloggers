@@ -5,3 +5,6 @@
 lib/
 !lib/README.md
 .DS_Store
+
+# Don't give away access to twitter!
+twitter.yaml

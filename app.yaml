@@ -21,6 +21,13 @@ handlers:
   script: main.app
   login: admin # !IMPORTANT
 
+# WARNING: Make sure this is login: admin.
+# This url will be called by GAE periodically
+# to update the feed.
+- url: /tweet_posts
+  script: main.app
+  login: admin # !IMPORTANT
+
 # Catch-all.
 - url: .*
   script: main.app
