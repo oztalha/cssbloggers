@@ -16,8 +16,8 @@ import feedparser
 # I've tested the tweepy code in the REPL and it works. This feels terrible!
 try:
     import tweepy
-except ImportError:
-    logging.error('Could not load tweepy! Tweets will not be emitted.')
+except ImportError, e:
+    logging.error(e)
 
 
 # Define the application.
