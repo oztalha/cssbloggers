@@ -11,13 +11,7 @@ from google.appengine.ext import ndb
 from flask import Flask, render_template, request, make_response
 
 import feedparser
-
-# If you're getting __ssl import errors, it's mostly due to a GAE flaw. 
-# I've tested the tweepy code in the REPL and it works. This feels terrible!
-try:
-    import tweepy
-except ImportError, e:
-    logging.error(e)
+import tweepy
 
 
 # Define the application.
