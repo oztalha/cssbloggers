@@ -3,8 +3,8 @@ from datetime import datetime
 import logging
 import random
 import yaml
-import sys
 
+from datetime import datetime
 from google.appengine.api import urlfetch
 from google.appengine.ext import db
 from google.appengine.ext import ndb
@@ -17,7 +17,7 @@ import feedparser
 try:
     import tweepy
 except ImportError:
-    pass
+    logging.error('Could not load tweepy! Tweets will not be emitted.')
 
 
 # Define the application.
@@ -43,6 +43,7 @@ for author_id, author_obj in AUTHORS.items():
 # This yaml file should be kept secret!
 TWITTER = yaml.load(open('twitter.yaml'))
 
+
 # This is the only model used. 
 class Story(ndb.Model):
     author_id = ndb.StringProperty(indexed=True, required=True)
@@ -61,6 +62,7 @@ class Story(ndb.Model):
 #                \___\___/|_| |_|\__|_|  \___/|_|_|\___|_|                     #
 #                                                                              #
 ################################################################################
+
 
 @app.route('/')
 @app.route('/stories/by/<author_id>')
@@ -92,7 +94,7 @@ def index(author_id=None):
     return render_template('index.html',
                            posts=posts,
                            next_cursor=next_cursor,
-                           prev_cursor=None,#next_cursor.reversed(),
+                           prev_cursor=None,
                            more=more,
                            author=author,
                            author_id=author_id,
@@ -103,7 +105,7 @@ def index(author_id=None):
 def atom_feed():
     stories = Story.query().order(-Story.date).fetch(10)
     response = make_response(render_template('atom.xml', stories=stories))
-    response.content_type='text/xml'
+    response.content_type = 'text/xml'
     return response
 
 
@@ -126,6 +128,7 @@ def add_or_update_stories(author_id, blog_url):
 
     return str(stories)
 
+
 @app.route('/pull_posts')
 def pull_posts():
     # There is a 10 minute timeout on cron jobs. If someone's page is 
@@ -142,7 +145,7 @@ def pull_posts():
 
 @app.route('/tweet_posts')
 def tweet_posts():
-    for story in Story.query(Story.tweeted != True).fetch(1):
+    for story in Story.query(Story.tweeted == False).fetch(1):
         try:
             auth = tweepy.OAuthHandler(TWITTER['api_key'], 
                                        TWITTER['api_secret'])
@@ -158,12 +161,12 @@ def tweet_posts():
         story.tweeted = True
         story.put()
 
-        return story.link # Tweet one at a time.
+        return story.link  # Tweet one at a time.
     return "noop"
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(_):
     """Return a custom 404 error."""
     return render_template('404.html'), 404
 
@@ -195,11 +198,10 @@ def pretty_date(time=False):
     pretty string like 'an hour ago', 'Yesterday', '3 months ago',
     'just now', etc.
     """
-    from datetime import datetime
     now = datetime.now()
     if type(time) is int:
         diff = now - datetime.fromtimestamp(time)
-    elif isinstance(time,datetime):
+    elif isinstance(time, datetime):
         diff = now - time
     elif not time:
         diff = now - now
@@ -215,13 +217,13 @@ def pretty_date(time=False):
         if second_diff < 60:
             return str(second_diff) + " seconds ago"
         if second_diff < 120:
-            return  "a minute ago"
+            return "a minute ago"
         if second_diff < 3600:
-            return str( second_diff / 60 ) + " minutes ago"
+            return str(second_diff / 60) + " minutes ago"
         if second_diff < 7200:
             return "an hour ago"
         if second_diff < 86400:
-            return str( second_diff / 3600 ) + " hours ago"
+            return str(second_diff / 3600) + " hours ago"
     if day_diff == 1:
         return "Yesterday"
     if day_diff < 7:
@@ -233,9 +235,10 @@ def pretty_date(time=False):
     return str(day_diff/365) + " years ago"
 
 
-
 REQ_FIELDS = ['title', 'summary', 'link']
 DATE_PREF_ORDERING = ['published_parsed', 'created_parsed', 'updated_parsed']
+
+
 def fetch_stories(feed_url):
     # Note: feedparser is fault-tolerant. It catches all exceptions for you,
     # so you don't need a try...except block.
