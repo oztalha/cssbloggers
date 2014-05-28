@@ -1,6 +1,9 @@
 from datetime import datetime
+
+import logging
 import random
 import yaml
+import sys
 
 from google.appengine.api import urlfetch
 from google.appengine.ext import db
@@ -119,7 +122,7 @@ def add_or_update_stories(author_id, blog_url):
                 blog_post.tweeted = False
                 blog_post.put()
         except db.Error:
-            pass # XXX: TODO: ADD LOGGING
+            logging.error('Error putting story with link %s' % story['link'])
 
     return str(stories)
 
@@ -147,8 +150,8 @@ def tweet_posts():
                                   TWITTER['consumer_secret'])
             api = tweepy.API(auth)
             api.update_status("%s %s" % (story.title[:120], story.link))
-        except:
-            pass # XXX: TODO: ADD LOGGING
+        except Exception, e:
+            logging.error(e)
 
         # If there is an error, ignore it and still consider it tweeted.
         # This is not a high-availability-required service. 
