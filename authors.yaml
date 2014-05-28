@@ -24,3 +24,9 @@ cmetgher:
   feed_url: http://healthyagents.com/atom.xml
   twitter: cmetgher
   blurb: I build ABMs of social determinants of cancer. I will be blogging about applications of computational social science methods to health. 
+
+toz:
+  name: Talha Oz
+  site_url: http://www.mli.gmu.edu/toz/wordpress/
+  feed_url: http://www.mli.gmu.edu/toz/wordpress/feed/
+  blurb: "Building an empirically grounded spatially explicit agent based model on health care provider preference of patients calibrated/validated by social media data"
