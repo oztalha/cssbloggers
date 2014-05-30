@@ -146,7 +146,24 @@ def tweet_posts():
             auth.set_access_token(TWITTER['consumer_key'], 
                                   TWITTER['consumer_secret'])
             api = tweepy.API(auth)
-            api.update_status("%s %s" % (story.title[:120], story.link))
+            author = AUTHORS[story.author_id]
+
+
+            # URLS are automatically shorted to twenty characters.
+            # I subtract an additional character for the space between
+            # the name and the link.
+            # 
+            # See: https://dev.twitter.com/discussions/1062
+            n = 140 - 20 - 1
+            if 'twitter' in author:
+                mention = author['twitter']
+                n -= (len(mention) + 2) # space and ampersand
+                api.update_status("@%s %s %s" % (mention,
+                                                 story.title[:n], 
+                                                 story.link))
+            else:
+                api.update_status("%s %s" % (story.title[:n], story.link))
+
         except Exception, e:
             logging.error(e)
 
