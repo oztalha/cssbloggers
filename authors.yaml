@@ -21,7 +21,7 @@ cw:
 cmetgher:
   name: Cristina Metgher
   site_url: http://healthyagents.com/
-  feed_url: http://healthyagents.com/atom.xml
+  #feed_url: http://healthyagents.com/atom.xml
   twitter: cmetgher
   blurb: I build ABMs of social determinants of cancer. I will be blogging about applications of computational social science methods to health. 
 
