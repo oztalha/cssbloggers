@@ -31,3 +31,10 @@ toz:
   feed_url: http://www.mli.gmu.edu/toz/wordpress/feed/
   twitter: tozCSS
   blurb: "Building an empirically grounded spatially explicit agent based model on health care provider preference of patients calibrated/validated by social media data"
+
+dmasad:
+  name: David Masad
+  site_url: http://www.davidmasad.com
+  feed_url: http://davidmasad.com/blog/feed/
+  tiwtter: badnetworker
+  blurb: "I use computational methods to study international relations, particularly conflict and the arms trade."
