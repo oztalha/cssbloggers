@@ -27,10 +27,10 @@ cw:
 
 toz:
   name: Talha Oz
-  site_url: http://www.mli.gmu.edu/toz/wordpress/
-  feed_url: http://www.mli.gmu.edu/toz/wordpress/feed/
+  site_url: http://talhaoz.com
+  feed_url: http://talhaoz.com/?cat=38&feed=rss2
   twitter: tozCSS
-  blurb: "Building an empirically grounded spatially explicit agent based model on health care provider preference of patients calibrated/validated by social media data"
+  blurb: "Analyzing geoSocial media computationally"
 
 dmasad:
   name: David Masad
