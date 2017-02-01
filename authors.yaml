@@ -28,7 +28,7 @@ cw:
 toz:
   name: Talha Oz
   site_url: http://talhaoz.com
-  feed_url: http://talhaoz.com/?cat=17&feed=rss2
+  feed_url: http://talhaoz.com/category/en/feed/
   twitter: tozCSS
   blurb: "Analyzing geoSocial media computationally"
 
